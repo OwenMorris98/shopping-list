@@ -1,15 +1,27 @@
 import {useState, useEffect} from 'react'
 import axios from 'axios';
 
-export const useListState = async () => {
+export const useListState = () => {
  
     const [listItems, setListItems] = useState<any[]>([]);
 
-    const addToList = async (itemToAdd) => {
+    const [inputValue, setinputValue] = useState('');
 
-        setListItems( currentItems => [...currentItems, itemToAdd])
+    const handleInput = (event) => {
+      setinputValue(event.target.value);
+    };
+  
+    const handleSubmit = () => {
+      if(inputValue.trim() !== '') {
+        setListItems((currentItems) => [...currentItems, {name: inputValue}]);
+        addToList(inputValue);
+        setinputValue('');
+      }
+    };
+  
+  
 
-        const postData = async () => {
+    const addToList = async (itemToAdd) => { 
             try {
                 // item to add as parameter...
                 //same as {
@@ -21,7 +33,7 @@ export const useListState = async () => {
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
-        };
+  
 
     };
 
@@ -42,8 +54,9 @@ export const useListState = async () => {
 
     return {
         listItems, 
-        setListItems,
-        addToList
+        handleInput,
+        handleSubmit,
+        inputValue
 
     }
 
